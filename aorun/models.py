@@ -4,6 +4,8 @@ from torch.nn import MSELoss
 from torch.autograd import Variable
 from torch.optim import SGD
 
+from . import objectives
+
 
 class Model(object):
 
@@ -29,6 +31,7 @@ class Model(object):
         return y
 
     def fit(self, X, y, loss, optimizer, batch_size=32, n_epochs=10):
+        loss = objectives.get(loss)
         optimizer.params = self.params
         n_samples, *_ = X.size()
         history = {'loss': []}
