@@ -1,10 +1,11 @@
+import pytest
 from .context import aorun
 
+import torch
 from aorun.models import Model
 from aorun.layers import Dense
 from aorun.layers import Relu
-
-import torch
+from aorun.optimizers import SGD
 
 
 def test_model_constructor_empty():
@@ -51,3 +52,44 @@ def test_model_forward():
     y = model.forward(x)
 
     assert y.size() == (2, 20)
+
+
+def test_model_simple_fit():
+
+    x = torch.rand(20, 4)
+    y = torch.rand(20, 10)
+
+    model = Model(
+        Dense(10, input_dim=x.size()[-1]),
+        Relu(),
+        Dense(5),
+        Relu(),
+        Dense(y.size()[-1])
+    )
+
+    def mse(y, o):
+        return torch.sum((y - o).pow(2))
+
+    opt = SGD(lr=0.01, momentum=0.9)
+    history = model.fit(x, y, loss=mse, optimizer=opt, n_epochs=10)
+
+    assert len(history['loss']) == 10
+    assert all(type(v) is float for v in history['loss'])
+    assert history['loss'] == sorted(history['loss'], reverse=True)
+
+
+def test_model_fit_unknown_loss():
+
+    x = torch.rand(20, 4)
+    y = torch.rand(20, 10)
+
+    model = Model(
+        Dense(10, input_dim=x.size()[-1]),
+        Relu(),
+        Dense(5),
+        Relu(),
+        Dense(y.size()[-1])
+    )
+
+    with pytest.raises(Exception) as e:
+        model.fit(x, y, loss='UNKNOWN_TEST', batch_size=10, n_epoch=5)
