@@ -1,7 +1,12 @@
+from torch.nn import Linear
+from torch.nn import ReLU
+from torch.autograd import Variable
 
 
 class Layer(object):
-    pass
+
+    def __init__(self, input_dim=None):
+        self.input_dim = input_dim
 
 
 class Dense(Layer):
@@ -9,20 +14,30 @@ class Dense(Layer):
     def __init__(self, n, *args, **kwargs):
         super(Dense, self).__init__(*args, **kwargs)
         self.n = n
+        self.output_dim = n
+        if self.input_dim:
+            self.l = Linear(self.input_dim, n)
 
-    def __len__(self):
-        return self.n
+    def build(self, input_dim):
+        self.input_dim = input_dim
+        self.l = Linear(self.input_dim, self.n)
 
-
-class ProbabilisticDense(Dense):
-
-    def __init__(self, *args, **kwargs):
-        super(ProbabilisticDense, self).__init__(*args, **kwargs)
+    def forward(self, x):
+        if type(x) is not Variable:
+            x = Variable(x)
+        return self.l(x)
 
 
 class Activation(Layer):
-    pass
+
+    def build(self, input_dim):
+        self.output_dim = input_dim
 
 
 class Relu(Activation):
-    pass
+
+    def __init__(self):
+        self.l = ReLU()
+
+    def forward(self, x):
+        return self.l.forward(x)
