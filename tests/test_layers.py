@@ -43,3 +43,11 @@ def test_relu_output_size():
 
     assert y.size() == (2, 3)
     assert (y.data >= 0).sum() == np.prod(y.size())
+
+
+def test_layer_get_params():
+    l = Dense(3, input_dim=3)
+    assert len(l.params) == 2
+
+    l = Relu()
+    assert len(l.params) == 0

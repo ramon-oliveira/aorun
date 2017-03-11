@@ -8,6 +8,13 @@ class Layer(object):
     def __init__(self, input_dim=None):
         self.input_dim = input_dim
 
+    @property
+    def params(self):
+        if self.l:
+            return tuple(self.l.parameters())
+        else:
+            return tuple()
+
 
 class Dense(Layer):
 
