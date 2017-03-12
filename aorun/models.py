@@ -37,10 +37,10 @@ class Model(object):
         history = {'loss': []}
         begin = min(batch_size, n_samples)
         end = n_samples + (n_samples % batch_size) + 1
+        step = batch_size
 
         for epoch in range(n_epochs):
-            epoch_bar = tqdm(range(begin, end, batch_size),
-                             desc=f'Epoch {epoch+1:2}')
+            epoch_bar = trange(begin, end, step, desc=f'Epoch {epoch+1:2}')
             loss_sum = 0
             for ibatch, split in enumerate(epoch_bar, start=1):
                 X_batch = Variable(X[(split - batch_size):split])
