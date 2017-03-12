@@ -1,4 +1,4 @@
-from tqdm import tqdm
+from tqdm import tqdm, trange
 import torch
 from torch.nn import MSELoss
 from torch.autograd import Variable
@@ -37,8 +37,12 @@ class Model(object):
         history = {'loss': []}
         begin = min(batch_size, n_samples)
         end = n_samples + (n_samples % batch_size) + 1
-        for epoch in range(n_epochs):
-            for split in tqdm(range(begin, end, batch_size)):
+
+        for epoch in range(n_epochs):  #tqdm(range(n_epochs), desc='Training', position=0):
+            epoch_bar = tqdm(range(begin, end, batch_size),
+                             desc=f'Epoch {epoch+1:2}')
+            loss_sum = 0
+            for ibatch, split in enumerate(epoch_bar, start=1):
                 X_batch = Variable(X[(split - batch_size):split])
                 y_batch = Variable(y[(split - batch_size):split])
 
@@ -46,6 +50,8 @@ class Model(object):
                 loss_value = loss(y_batch, out_batch)
                 loss_value.backward()
                 optimizer.step()
+                loss_sum += loss_value.data[0]
+                epoch_bar.set_postfix(loss=f'{loss_sum/ibatch:.4f}')
             history['loss'].append(loss_value.data[0])
 
         return history
