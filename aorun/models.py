@@ -38,7 +38,7 @@ class Model(object):
         begin = min(batch_size, n_samples)
         end = n_samples + (n_samples % batch_size) + 1
 
-        for epoch in range(n_epochs):  #tqdm(range(n_epochs), desc='Training', position=0):
+        for epoch in range(n_epochs):
             epoch_bar = tqdm(range(begin, end, batch_size),
                              desc=f'Epoch {epoch+1:2}')
             loss_sum = 0
