@@ -1,6 +1,7 @@
 from .context import aorun
 
 from aorun.layers import Dense
+from aorun.layers import ProbabilisticDense
 from aorun.layers import Relu
 
 import torch
@@ -51,3 +52,15 @@ def test_layer_get_params():
 
     l = Relu()
     assert len(l.params) == 0
+
+
+def test_layer_probabilistic_dense():
+    x = torch.Tensor(2, 10)
+    l = ProbabilisticDense(5, input_dim=10)
+
+    y1 = l.forward(x)
+    assert y1.size() == (2, 5)
+
+    y2 = l.forward(y)
+    assert y2.size() == (2, 3)
+    assert y1 != y2
