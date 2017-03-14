@@ -15,7 +15,7 @@ def test_dense_layer_output_dim():
 
 
 def test_dense_layer_forward():
-    x = torch.Tensor(2, 10)
+    x = torch.randn(2, 10)
     l = Dense(5, input_dim=10)
     y = l.forward(x)
 
@@ -23,7 +23,7 @@ def test_dense_layer_forward():
 
 
 def test_dense_multiple_layers():
-    x = torch.Tensor(2, 10)
+    x = torch.randn(2, 10)
     l1 = Dense(5, input_dim=10)
     l2 = Dense(3, input_dim=5)
 
@@ -35,7 +35,7 @@ def test_dense_multiple_layers():
 
 
 def test_relu_output_size():
-    x = torch.Tensor(2, 2)
+    x = torch.randn(2, 2)
     l1 = Dense(3, input_dim=2)
     l2 = Relu()
 
@@ -55,12 +55,25 @@ def test_layer_get_params():
 
 
 def test_layer_probabilistic_dense():
-    x = torch.Tensor(2, 10)
+    x = torch.randn(2, 10)
     l = ProbabilisticDense(5, input_dim=10)
 
     y1 = l.forward(x)
     assert y1.size() == (2, 5)
 
-    y2 = l.forward(y)
-    assert y2.size() == (2, 3)
-    assert y1 != y2
+    y2 = l.forward(x)
+    assert y2.size() == (2, 5)
+    assert not torch.equal(y1.data, y2.data)
+
+
+def test_layer_probabilistic_dense_build():
+    x = torch.randn(2, 10)
+    l = ProbabilisticDense(5)
+    l.build(10)
+
+    y1 = l.forward(x)
+    assert y1.size() == (2, 5)
+
+    y2 = l.forward(x)
+    assert y2.size() == (2, 5)
+    assert not torch.equal(y1.data, y2.data)
