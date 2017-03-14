@@ -2,6 +2,7 @@ import torch
 from torch.nn import Linear
 from torch.nn import ReLU
 from torch.autograd import Variable
+from torch.nn import Parameter
 
 
 class Layer(object):
@@ -24,16 +25,23 @@ class Dense(Layer):
         self.n = n
         self.output_dim = n
         if self.input_dim:
-            self.l = Linear(self.input_dim, n)
+            self.W = Parameter(torch.randn(self.input_dim, self.output_dim))
+            self.b = Parameter(torch.randn(self.output_dim))
+
+    @property
+    def params(self):
+        return (self.W, self.b)
 
     def build(self, input_dim):
         self.input_dim = input_dim
-        self.l = Linear(self.input_dim, self.n)
+        self.W = Parameter(torch.randn(self.input_dim, self.output_dim))
+        self.b = Parameter(torch.randn(self.output_dim))
 
     def forward(self, x):
         if type(x) is not Variable:
-            x = Variable(x)
-        return self.l(x)
+            x = Variable(x, requires_grad=False)
+        xW = x @ self.W
+        return xW + self.b.expand_as(xW)
 
 
 class ProbabilisticDense(Layer):
@@ -45,15 +53,15 @@ class ProbabilisticDense(Layer):
         if self.input_dim:
             input_dim = self.input_dim
             output_dim = self.output_dim
-            self.W_mu = Variable(torch.randn(input_dim, output_dim))
-            self.W_sigma = Variable(torch.randn(input_dim, output_dim))
-            self.bias = Variable(torch.randn(output_dim))
+            self.W_mu = Parameter(torch.randn(input_dim, output_dim))
+            self.W_sigma = Parameter(torch.randn(input_dim, output_dim))
+            self.bias = Parameter(torch.randn(output_dim))
 
     def build(self, input_dim):
         self.input_dim = input_dim
-        self.W_mu = Variable(torch.randn(self.input_dim, self.output_dim))
-        self.W_sigma = Variable(torch.randn(self.input_dim, self.output_dim))
-        self.bias = Variable(torch.randn(self.output_dim))
+        self.W_mu = Parameter(torch.randn(self.input_dim, self.output_dim))
+        self.W_sigma = Parameter(torch.randn(self.input_dim, self.output_dim))
+        self.bias = Parameter(torch.randn(self.output_dim))
 
     @property
     def params(self):

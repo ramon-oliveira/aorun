@@ -44,8 +44,9 @@ def test_model_forward():
         Dense(1),
         Dense(20)
     )
+    model.build()
 
-    x = torch.Tensor(2, 4)
+    x = torch.randn(2, 4)
     y = model.forward(x)
 
     assert y.size() == (2, 20)
