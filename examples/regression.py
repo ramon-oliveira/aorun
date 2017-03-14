@@ -34,8 +34,8 @@ model = Model(
     Dense(1)
 )
 
-sgd = SGD(lr=0.01)
-history = model.fit(X_train, y_train, loss='mse', optimizer=sgd, n_epochs=10)
+sgd = SGD(lr=0.001)
+history = model.fit(X_train, y_train, loss='mse', optimizer=sgd, n_epochs=100)
 y_pred = model.forward(X_test).data
 r2 = metrics.r2_score(y_test.numpy(), y_pred.numpy())
 print('r2 score:', r2)
