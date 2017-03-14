@@ -55,26 +55,25 @@ class ProbabilisticDense(Layer):
             output_dim = self.output_dim
             self.W_mu = Parameter(torch.randn(input_dim, output_dim))
             self.W_sigma = Parameter(torch.randn(input_dim, output_dim))
-            self.bias = Parameter(torch.randn(output_dim))
+            self.b = Parameter(torch.randn(output_dim))
 
     def build(self, input_dim):
         self.input_dim = input_dim
         self.W_mu = Parameter(torch.randn(self.input_dim, self.output_dim))
         self.W_sigma = Parameter(torch.randn(self.input_dim, self.output_dim))
-        self.bias = Parameter(torch.randn(self.output_dim))
+        self.b = Parameter(torch.randn(self.output_dim))
 
     @property
     def params(self):
-        return (self.W_mu, self.W_sigma, self.bias)
+        return (self.W_mu, self.W_sigma, self.b)
 
     def forward(self, x):
         if type(x) is not Variable:
             x = Variable(x)
         eps = Variable(torch.randn(self.input_dim, self.output_dim))
         W = self.W_mu + torch.log1p(torch.exp(self.W_sigma)) * eps
-
         xW = x @ W
-        return xW + self.bias.expand_as(xW)
+        return xW + self.b.expand_as(xW)
 
 
 class Activation(Layer):
