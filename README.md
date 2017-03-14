@@ -1,7 +1,5 @@
 # Aorun: A keras-like wrapper for Pytorch
 
-------------------
-
 ## Getting started
 
 Here is a simple regression example:
