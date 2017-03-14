@@ -11,7 +11,6 @@ class Model(object):
 
     def __init__(self, *layers):
         self.layers = list(layers)
-        self.build()
 
     @property
     def params(self):
@@ -31,6 +30,7 @@ class Model(object):
         return y
 
     def fit(self, X, y, loss, optimizer, batch_size=32, n_epochs=10):
+        self.build()
         loss = objectives.get(loss)
         optimizer.params = self.params
         n_samples, *_ = X.size()
