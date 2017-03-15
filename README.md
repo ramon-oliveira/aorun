@@ -28,14 +28,14 @@ y_pred = model.forward(X_test)
     - RNN
     - GRU
     - LSTM
-* Add objectives:
+* Add losses:
     - mean absolute error
-    - binary crossentropy
-    - categoriacal crossentropy
     - KL divergence
 * Add optimizers:
     - Adam
     - RMSProp
+* Add initializations:
+    - glorot
 * Add examples:
     - mnist
     - cifar10

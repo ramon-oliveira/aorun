@@ -1,21 +1,14 @@
 import torch
-from torch.nn import Linear
-from torch.nn import ReLU
 from torch.autograd import Variable
 from torch.nn import Parameter
+
+from . import activations
 
 
 class Layer(object):
 
     def __init__(self, input_dim=None):
         self.input_dim = input_dim
-
-    @property
-    def params(self):
-        if self.l:
-            return tuple(self.l.parameters())
-        else:
-            return tuple()
 
 
 class Dense(Layer):
@@ -39,7 +32,7 @@ class Dense(Layer):
 
     def forward(self, x):
         if type(x) is not Variable:
-            x = Variable(x, requires_grad=False)
+            x = Variable(x)
         xW = x @ self.W
         return xW + self.b.expand_as(xW)
 
@@ -78,14 +71,15 @@ class ProbabilisticDense(Layer):
 
 class Activation(Layer):
 
+    def __init__(self, activation):
+        self.activation = activations.get(activation)
+
+    @property
+    def params(self):
+        return tuple()
+
     def build(self, input_dim):
         self.output_dim = input_dim
 
-
-class Relu(Activation):
-
-    def __init__(self):
-        self.l = ReLU()
-
     def forward(self, x):
-        return self.l.forward(x)
+        return self.activation(x)
