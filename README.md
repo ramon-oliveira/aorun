@@ -6,12 +6,12 @@ Here is a simple regression example:
 
 ```python
 from aorun.models import Model
-from aorun.layers import Dense, Relu
+from aorun.layers import Dense, Activation
 from aorun.optimizers import SGD
 
 model = Model()
 model.add(Dense(10, input_dim=3))
-model.add(Relu())
+model.add(Activation('relu'))
 model.add(Dense(1))
 
 sgd = SGD(lr=0.001)
@@ -41,8 +41,6 @@ y_pred = model.forward(X_test)
 * Add examples:
     - mnist
     - cifar10
-* Bug fix:
-    - Stabilize training in probabilistic layers
 
 ## Why Aorun?
 
