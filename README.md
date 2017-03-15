@@ -1,4 +1,6 @@
-# Aorun: A keras-like wrapper for Pytorch
+# Aorun: A high-level API for PyTorch
+
+Aorun is highly inspired by Keras API.
 
 ## Getting started
 
