@@ -1,4 +1,6 @@
-# Aorun: A keras-like wrapper for Pytorch
+# Aorun: A high-level API for PyTorch
+
+Aorun is highly inspired by Keras API.
 
 ## Getting started
 
@@ -6,12 +8,12 @@ Here is a simple regression example:
 
 ```python
 from aorun.models import Model
-from aorun.layers import Dense, Relu
+from aorun.layers import Dense, Activation
 from aorun.optimizers import SGD
 
 model = Model()
 model.add(Dense(10, input_dim=3))
-model.add(Relu())
+model.add(Activation('relu'))
 model.add(Dense(1))
 
 sgd = SGD(lr=0.001)
@@ -23,24 +25,24 @@ y_pred = model.forward(X_test)
 ## TODO:
 
 * Numpy friendly
+* Model.fit:
+    - verbose level
+    - validation set
 * Add layers:
     - Convolutional2D
     - RNN
     - GRU
     - LSTM
-* Add objectives:
-    - mean absolute error
-    - binary crossentropy
-    - categoriacal crossentropy
+* Add losses:
     - KL divergence
 * Add optimizers:
     - Adam
     - RMSProp
+* Add initializations:
+    - glorot
 * Add examples:
     - mnist
     - cifar10
-* Bug fix:
-    - Stabilize training in probabilistic layers
 
 ## Why Aorun?
 

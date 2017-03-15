@@ -3,7 +3,7 @@ from .context import aorun
 import torch
 from aorun.layers import Dense
 from aorun.layers import ProbabilisticDense
-from aorun.layers import Relu
+from aorun.layers import Activation
 
 
 def test_dense_layer_output_dim():
@@ -35,7 +35,7 @@ def test_dense_multiple_layers():
 def test_relu_output_size():
     x = torch.randn(2, 2)
     l1 = Dense(3, input_dim=2)
-    l2 = Relu()
+    l2 = Activation('relu')
 
     y = l1.forward(x)
     y = l2.forward(y)
@@ -48,7 +48,7 @@ def test_layer_get_params():
     l = Dense(3, input_dim=3)
     assert len(l.params) == 2
 
-    l = Relu()
+    l = Activation('relu')
     assert len(l.params) == 0
 
 
