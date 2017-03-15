@@ -2,7 +2,7 @@ from .context import aorun
 
 import torch
 from torch.autograd import Variable
-from aorun.objectives import mean_squared_error
+from aorun.losses import mean_squared_error
 from aorun.optimizers import SGD
 
 

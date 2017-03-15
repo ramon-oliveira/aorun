@@ -20,10 +20,10 @@ class Layer(object):
 
 class Dense(Layer):
 
-    def __init__(self, n, *args, **kwargs):
+    def __init__(self, units, *args, **kwargs):
         super(Dense, self).__init__(*args, **kwargs)
-        self.n = n
-        self.output_dim = n
+        self.units = units
+        self.output_dim = units
         if self.input_dim:
             self.W = Parameter(torch.randn(self.input_dim, self.output_dim))
             self.b = Parameter(torch.randn(self.output_dim))
@@ -46,10 +46,10 @@ class Dense(Layer):
 
 class ProbabilisticDense(Layer):
 
-    def __init__(self, n, *args, **kwargs):
+    def __init__(self, units, *args, **kwargs):
         super(ProbabilisticDense, self).__init__(*args, **kwargs)
-        self.n = n
-        self.output_dim = n
+        self.units = units
+        self.output_dim = units
         if self.input_dim:
             input_dim = self.input_dim
             output_dim = self.output_dim

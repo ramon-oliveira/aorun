@@ -6,7 +6,7 @@ from aorun.models import Model
 from aorun.layers import Dense
 from aorun.layers import Relu
 from aorun.optimizers import SGD
-from aorun.objectives import mean_squared_error
+from aorun.losses import mean_squared_error
 
 
 def test_model_constructor_empty():

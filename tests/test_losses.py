@@ -2,9 +2,9 @@ from .context import aorun
 
 import torch
 from torch.autograd import Variable
-from aorun.objectives import mean_squared_error
-from aorun.objectives import binary_crossentropy
-from aorun.objectives import categorical_crossentropy
+from aorun.losses import mean_squared_error
+from aorun.losses import binary_crossentropy
+from aorun.losses import categorical_crossentropy
 
 
 def test_mse_variable():
