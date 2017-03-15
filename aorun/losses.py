@@ -2,7 +2,7 @@ import torch
 
 
 def mean_squared_error(true, pred):
-    return torch.mean((true - pred)**2)
+    return ((true - pred)**2).mean()
 
 
 def binary_crossentropy(true, pred, eps=1e-9):
@@ -26,6 +26,6 @@ def get(obj):
         if obj in globals():
             return globals()[obj]
         else:
-            raise Exception(f'Unknown objective: {obj}')
+            raise Exception(f'Unknown loss: {obj}')
     else:
-        raise Exception('Objective must be a callable or str')
+        raise Exception('Loss must be a callable or str')
