@@ -1,11 +1,9 @@
 from .context import aorun
 
+import torch
 from aorun.layers import Dense
 from aorun.layers import ProbabilisticDense
 from aorun.layers import Relu
-
-import torch
-import numpy as np
 
 
 def test_dense_layer_output_dim():
@@ -43,7 +41,7 @@ def test_relu_output_size():
     y = l2.forward(y)
 
     assert y.size() == (2, 3)
-    assert (y.data >= 0).sum() == np.prod(y.size())
+    assert (y.data >= 0).sum() == 6
 
 
 def test_layer_get_params():
