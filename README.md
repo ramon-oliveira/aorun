@@ -23,13 +23,15 @@ y_pred = model.forward(X_test)
 ## TODO:
 
 * Numpy friendly
+* Model.fit:
+    - verbose level
+    - validation set
 * Add layers:
     - Convolutional2D
     - RNN
     - GRU
     - LSTM
 * Add losses:
-    - mean absolute error
     - KL divergence
 * Add optimizers:
     - Adam
