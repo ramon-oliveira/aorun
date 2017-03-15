@@ -1,4 +1,4 @@
-from torch.nn.functional import relu
+from torch.nn.functional import relu, softmax
 
 
 def get(obj):
