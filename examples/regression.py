@@ -10,7 +10,7 @@ from sklearn import metrics
 import torch
 from aorun.models import Model
 from aorun.layers import Dense
-from aorun.layers import Relu
+from aorun.layers import Activation
 from aorun.optimizers import SGD
 
 X, y = load_boston(return_X_y=True)
@@ -28,9 +28,9 @@ y_test = torch.from_numpy(y_test)
 
 model = Model(
     Dense(10, input_dim=X_train.size()[-1]),
-    Relu(),
+    Activation('relu'),
     Dense(10),
-    Relu(),
+    Activation('relu'),
     Dense(1)
 )
 
