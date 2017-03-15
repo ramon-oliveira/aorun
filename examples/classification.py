@@ -18,7 +18,7 @@ torch.manual_seed(42)
 
 X, y = datasets.load_iris(return_X_y=True)
 X = X.astype('float32')
-y = np.eye(y.max()+1)[y].astype('float32')
+y = np.eye(y.max() + 1)[y].astype('float32')
 
 X = StandardScaler().fit_transform(X)
 
