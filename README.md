@@ -27,6 +27,7 @@ y_pred = model.forward(X_test)
 * Model.fit:
     - verbose level
     - validation set
+    - set optimizer with string
 * Add layers:
     - Convolutional2D
     - RNN
@@ -36,8 +37,8 @@ y_pred = model.forward(X_test)
     - Adam
     - RMSProp
 * Add initializations:
-    - xavier
-    - glorot
+    - glorot normal
+    - glorot uniform
 * Add examples:
     - mnist
     - cifar10
