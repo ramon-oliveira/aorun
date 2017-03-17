@@ -67,7 +67,7 @@ def test_log_gaussian():
     assert np.all(loss.data.numpy() < 0)
 
 
-def test_variational_bayes():
+def test_variational_loss():
     X = torch.randn(4, 4)
     true = Variable(torch.Tensor([[0, 1], [1, 0]]))
     pred = Variable(torch.Tensor([[0.4, 0.6], [0.1, 0.9]]))
@@ -76,7 +76,6 @@ def test_variational_bayes():
         ProbabilisticDense(10, input_dim=4),
         ProbabilisticDense(1)
     )
-    model.build()
 
     ll = categorical_crossentropy
     variational_bayes = functools.partial(variational_loss,

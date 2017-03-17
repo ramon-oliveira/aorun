@@ -1,36 +1,48 @@
 from tqdm import tqdm, trange
+import numpy as np
 import torch
 from torch.nn import MSELoss
 from torch.autograd import Variable
 from torch.optim import SGD
 
 from . import losses
+from . import utils
 
 
 class Model(object):
 
     def __init__(self, *layers):
         self.layers = list(layers)
+        self.ready = False
 
     @property
     def params(self):
+        if not self.ready:
+            self._build()
         return [p for layer in self.layers for p in layer.params]
 
-    def build(self):
+    def _build(self):
         for prev_layer, next_layer in zip(self.layers[:-1], self.layers[1:]):
             next_layer.build(prev_layer.output_dim)
+        self.ready = True
 
     def add(self, layer):
         self.layers.append(layer)
+        self.ready = False
 
-    def forward(self, x):
-        y = self.layers[0].forward(x)
+    @utils.numpyio
+    def forward(self, X):
+        if not self.ready:
+            self._build()
+        y = self.layers[0].forward(X)
         for layer in self.layers[1:]:
             y = layer.forward(y)
         return y
 
+    @utils.numpyio
     def fit(self, X, y, loss, optimizer, batch_size=32, n_epochs=10):
-        self.build()
+        if not self.ready:
+            self._build()
         loss = losses.get(loss)
         optimizer.params = self.params
         n_samples, *_ = X.size()
