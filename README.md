@@ -33,16 +33,17 @@ y_pred = model.forward(X_test)
     - RNN
     - GRU
     - LSTM
-* Add losses:
-    - KL divergence
 * Add optimizers:
     - Adam
     - RMSProp
 * Add initializations:
+    - xavier
     - glorot
 * Add examples:
     - mnist
     - cifar10
+* Refactoring:
+    - variational loss
 
 ## Why Aorun?
 
