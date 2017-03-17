@@ -63,16 +63,16 @@ class ProbabilisticDense(Layer):
     def params(self):
         return (self.W_mu, self.W_rho, self.b_mu, self.b_rho)
 
-    def forward(self, x):
-        if type(x) is not Variable:
-            x = Variable(x)
+    def forward(self, X):
+        if type(X) is not Variable:
+            X = Variable(X)
 
         W_eps = Variable(torch.randn(self.input_dim, self.output_dim))
         self.W = W = self.W_mu + torch.log1p(torch.exp(self.W_rho)) * W_eps
         b_eps = Variable(torch.randn(self.output_dim))
         self.b = b = self.b_mu + torch.log1p(torch.exp(self.b_rho)) * b_eps
-        xW = x @ W
-        return xW + b.expand_as(xW)
+        XW = X @ W
+        return XW + b.expand_as(XW)
 
 
 class Activation(Layer):
