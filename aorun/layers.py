@@ -68,9 +68,9 @@ class ProbabilisticDense(Layer):
             x = Variable(x)
 
         W_eps = Variable(torch.randn(self.input_dim, self.output_dim))
-        W = self.W_mu + torch.log1p(torch.exp(self.W_rho)) * W_eps
+        self.W = W = self.W_mu + torch.log1p(torch.exp(self.W_rho)) * W_eps
         b_eps = Variable(torch.randn(self.output_dim))
-        b = self.b_mu + torch.log1p(torch.exp(self.b_rho)) * b_eps
+        self.b = b = self.b_mu + torch.log1p(torch.exp(self.b_rho)) * b_eps
         xW = x @ W
         return xW + b.expand_as(xW)
 
