@@ -24,7 +24,6 @@ y_pred = model.forward(X_test)
 
 ## TODO:
 
-* Numpy friendly
 * Model.fit:
     - verbose level
     - validation set
