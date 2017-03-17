@@ -3,6 +3,7 @@ from torch.autograd import Variable
 from torch.nn import Parameter
 
 from . import activations
+from . import initializers
 
 
 class Layer(object):
@@ -13,13 +14,13 @@ class Layer(object):
 
 class Dense(Layer):
 
-    def __init__(self, units, *args, **kwargs):
+    def __init__(self, units, init='glorot_uniform', *args, **kwargs):
         super(Dense, self).__init__(*args, **kwargs)
         self.units = units
         self.output_dim = units
+        self.init = initializers.get(init)
         if self.input_dim:
-            self.W = Parameter(torch.randn(self.input_dim, self.output_dim))
-            self.b = Parameter(torch.randn(self.output_dim))
+            self.build(self.input_dim)
 
     @property
     def params(self):
@@ -27,8 +28,10 @@ class Dense(Layer):
 
     def build(self, input_dim):
         self.input_dim = input_dim
-        self.W = Parameter(torch.randn(self.input_dim, self.output_dim))
-        self.b = Parameter(torch.randn(self.output_dim))
+        W_shape = [self.input_dim, self.output_dim]
+        b_shape = [self.output_dim]
+        self.W = self.init(W_shape, self.input_dim, self.output_dim)
+        self.b = self.init(b_shape, self.input_dim, self.output_dim)
 
     def forward(self, x):
         if type(x) is not Variable:
@@ -39,25 +42,22 @@ class Dense(Layer):
 
 class ProbabilisticDense(Layer):
 
-    def __init__(self, units, *args, **kwargs):
+    def __init__(self, units, init='glorot_uniform', *args, **kwargs):
         super(ProbabilisticDense, self).__init__(*args, **kwargs)
         self.units = units
         self.output_dim = units
+        self.init = initializers.get(init)
         if self.input_dim:
-            input_dim = self.input_dim
-            output_dim = self.output_dim
-            self.W_mu = Parameter(torch.randn(input_dim, output_dim))
-            # sigma = mu + log(1 + exp(rho)) * eps
-            self.W_rho = Parameter(torch.randn(input_dim, output_dim))
-            self.b_mu = Parameter(torch.randn(output_dim))
-            self.b_rho = Parameter(torch.randn(output_dim))
+            self.build(self.input_dim)
 
     def build(self, input_dim):
         self.input_dim = input_dim
-        self.W_mu = Parameter(torch.randn(self.input_dim, self.output_dim))
-        self.W_rho = Parameter(torch.randn(self.input_dim, self.output_dim))
-        self.b_mu = Parameter(torch.randn(self.output_dim))
-        self.b_rho = Parameter(torch.randn(self.output_dim))
+        W_shape = [self.input_dim, self.output_dim]
+        b_shape = [self.output_dim]
+        self.W_mu = self.init(W_shape, self.input_dim, self.output_dim)
+        self.W_rho = self.init(W_shape, self.input_dim, self.output_dim)
+        self.b_mu = self.init(b_shape, self.input_dim, self.output_dim)
+        self.b_rho = self.init(b_shape, self.input_dim, self.output_dim)
 
     @property
     def params(self):
