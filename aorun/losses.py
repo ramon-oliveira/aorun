@@ -27,7 +27,7 @@ def log_gaussian(x, mu, sigma):
     log2pi_2 = Variable(Tensor([1.8378770664093453 / 2]))
     log2pi_2 = log2pi_2.expand_as(mu)
 
-    return -log_sigma - log2pi_2 - (x - mu)**2 / (2 * sigma)
+    return -log_sigma - log2pi_2 - (x - mu)**2 / (2 * sigma**2)
 
 
 def variational_loss(true, pred, model, log_likelihood):
@@ -48,7 +48,7 @@ def variational_loss(true, pred, model, log_likelihood):
 
     ll = log_likelihood(true, pred)
 
-    return -ll + log_q + log_p
+    return -ll - (log_q + log_p)
 
 
 # aliases short names
