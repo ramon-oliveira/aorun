@@ -1,7 +1,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-
+import functools
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -12,6 +12,8 @@ from aorun.models import Model
 from aorun.layers import ProbabilisticDense
 from aorun.layers import Activation
 from aorun.optimizers import SGD
+from aorun.losses import variational_loss
+from aorun.losses import categorical_crossentropy
 
 X, y = datasets.load_iris(return_X_y=True)
 X = X.astype('float32')
@@ -29,9 +31,11 @@ model = Model(
     Activation('softmax')
 )
 
-sgd = SGD(lr=0.1)
-history = model.fit(X_train, y_train, n_epochs=500,
-                    loss='categorical_crossentropy', optimizer=sgd)
+sgd = SGD(lr=0.001)
+loss = functools.partial(variational_loss,
+                         model=model,
+                         log_likelihood=categorical_crossentropy)
+history = model.fit(X_train, y_train, n_epochs=500, loss=loss, optimizer=sgd)
 
 y_pred = model.forward(X_test)
 acc = metrics.accuracy_score(y_test.argmax(axis=1), y_pred.argmax(axis=1))
