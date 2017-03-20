@@ -37,16 +37,19 @@ def test_layer_relu():
 
 def test_softmax():
     x = Variable(torch.randn(10, 10))
-    assert np.all(torch.sum(softmax(x), dim=1).data.numpy() == 1)
+    sum_softmax_x = torch.sum(softmax(x), dim=1).data.numpy()
+    assert np.all(np.abs(sum_softmax_x - 1) <= 1e-6)
 
 
 def test_get_softmax():
     x = Variable(torch.randn(10, 10))
-    sm = torch.sum(activations.get('softmax')(x), dim=1)
-    assert np.all(sm.data.numpy() == 1)
+    softmax = activations.get('softmax')
+    sum_softmax_x = torch.sum(softmax(x), dim=1).data.numpy()
+    assert np.all(np.abs(sum_softmax_x - 1) <= 1e-6)
 
 
 def test_layer_softmax():
     x = Variable(torch.randn(10, 10))
     l = Activation('softmax')
-    assert np.all(torch.sum(l.forward(x), dim=1).data.numpy() == 1)
+    sum_softmax_x = torch.sum(l.forward(x), dim=1).data.numpy()
+    assert np.all(np.abs(sum_softmax_x - 1) <= 1e-6)
