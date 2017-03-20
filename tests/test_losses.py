@@ -10,7 +10,7 @@ from aorun.layers import ProbabilisticDense
 from aorun.losses import mean_squared_error
 from aorun.losses import binary_crossentropy
 from aorun.losses import categorical_crossentropy
-from aorun.losses import log_gaussian
+from aorun.losses import _log_gaussian
 from aorun.losses import variational_loss
 
 
@@ -62,7 +62,7 @@ def test_log_gaussian():
     x = Variable(torch.Tensor([1, 1]))
     mu = Parameter(torch.Tensor([5, 3]))
     sigma = Parameter(torch.Tensor([4, 5]))
-    loss = log_gaussian(x, mu, sigma)
+    loss = _log_gaussian(x, mu, sigma)
     loss.mean().backward()
     assert np.all(loss.data.numpy() < 0)
 
