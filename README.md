@@ -33,6 +33,8 @@ y_pred = model.forward(X_test)
     - RNN
     - GRU
     - LSTM
+* Add losses:
+    - Hellinger distance
 * Add optimizers:
     - Adam
     - RMSProp

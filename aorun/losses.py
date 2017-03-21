@@ -5,7 +5,7 @@ from torch.autograd import Variable
 from .layers import ProbabilisticDense
 
 
-def _log_gaussian(x, mu, sigma):
+def log_gaussian(x, mu, sigma):
     assert x.size() == mu.size() == sigma.size()
 
     log_sigma = torch.log(sigma)
@@ -30,32 +30,35 @@ def categorical_crossentropy(true, pred, eps=1e-9):
     return torch.mean(-torch.sum(true * torch.log(pred + eps), dim=1))
 
 
-def variational_loss(true, pred, model, log_likelihood):
-    log_p = Variable(torch.Tensor([0]))
-    log_q = Variable(torch.Tensor([0]))
-    for layer in model.layers:
-        if type(layer) is ProbabilisticDense:
-            # posterior
-            x = layer.W
-            mu = layer.W_mu
-            sigma = torch.log1p(torch.exp(layer.W_rho))
-            log_q += _log_gaussian(x, mu, sigma).sum()
+def variational_loss(model, log_likelihood):
+    log_likelihood = get(log_likelihood)
 
-            # prior
-            mu = Variable(Tensor([0])).expand_as(x)
-            sigma = Variable(Tensor([0.05])).expand_as(x)
-            log_p += _log_gaussian(x, mu, sigma).sum()
+    def loss(true, pred):
+        log_p = Variable(torch.Tensor([0]))
+        log_q = Variable(torch.Tensor([0]))
+        for layer in model.layers:
+            if type(layer) is ProbabilisticDense:
+                # posterior
+                x = layer.W
+                mu = layer.W_mu
+                sigma = torch.log1p(torch.exp(layer.W_rho))
+                log_q += log_gaussian(x, mu, sigma).sum()
 
-    ll = log_likelihood(true, pred)
+                # prior
+                mu = Variable(Tensor([0])).expand_as(x)
+                sigma = Variable(Tensor([1.0])).expand_as(x)
+                log_p += log_gaussian(x, mu, sigma).sum()
 
-    return -ll - log_q - log_p
-
+        ll = log_likelihood(true, pred)
+        return log_q - log_p - ll
+    return loss
 
 # aliases short names
 mse = mean_squared_error
 
 
 def get(obj):
+    print(type(obj))
     if callable(obj):
         return obj
     elif type(obj) is str:
