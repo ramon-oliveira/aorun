@@ -1,7 +1,7 @@
 import torch
+import math
 from torch.autograd import Variable
 from torch.nn import Parameter
-
 from . import activations
 from . import initializers
 
@@ -66,10 +66,12 @@ class ProbabilisticDense(Layer):
     def forward(self, X):
         if type(X) is not Variable:
             X = Variable(X)
-
-        W_eps = Variable(torch.randn(self.input_dim, self.output_dim))
+        sigma_prior = math.exp(-3)
+        W_eps = Variable(torch.zeros(self.input_dim, self.output_dim))
+        W_eps = torch.normal(W_eps, std=sigma_prior)
         self.W = W = self.W_mu + torch.log1p(torch.exp(self.W_rho)) * W_eps
-        b_eps = Variable(torch.randn(self.output_dim))
+        b_eps = Variable(torch.zeros(self.output_dim))
+        b_eps = torch.normal(b_eps, std=sigma_prior)
         self.b = b = self.b_mu + torch.log1p(torch.exp(self.b_rho)) * b_eps
         XW = X @ W
         return XW + b.expand_as(XW)
