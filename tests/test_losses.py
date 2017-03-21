@@ -7,6 +7,7 @@ from torch.nn import Parameter
 import functools
 from aorun.models import Model
 from aorun.layers import ProbabilisticDense
+from aorun.optimizers import SGD
 from aorun.losses import mean_squared_error
 from aorun.losses import binary_crossentropy
 from aorun.losses import categorical_crossentropy
@@ -69,17 +70,14 @@ def test_log_gaussian():
 
 def test_variational_loss():
     X = torch.randn(4, 4)
-    true = Variable(torch.Tensor([[0, 1], [1, 0]]))
-    pred = Variable(torch.Tensor([[0.4, 0.6], [0.1, 0.9]]))
+    y = torch.Tensor([[0, 1], [1, 0], [0, 1], [1, 0]])
 
     model = Model(
         ProbabilisticDense(10, input_dim=4),
-        ProbabilisticDense(1)
+        ProbabilisticDense(2)
     )
 
+    opt = SGD(lr=0.01)
     variational = variational_loss(model, 'categorical_crossentropy')
-
-    model.forward(X)
-    loss = variational(true, pred)
-    loss.backward()
-    assert loss.data[0] > 0, loss
+    history = model.fit(X, y, loss=variational, optimizer=opt)
+    assert history['loss'] == sorted(history['loss'], reverse=True)

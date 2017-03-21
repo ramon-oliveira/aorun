@@ -32,10 +32,14 @@ def categorical_crossentropy(true, pred, eps=1e-9):
 
 def variational_loss(model, log_likelihood):
     log_likelihood = get(log_likelihood)
+    prior_ratio = 0.5
+    prior_mu = Variable(Tensor([0]))
+    prior_sigma1 = Variable(Tensor([2.0]))
+    prior_sigma2 = Variable(Tensor([0.05]))
 
     def loss(true, pred):
-        log_p = Variable(torch.Tensor([0]))
-        log_q = Variable(torch.Tensor([0]))
+        log_p = Variable(torch.Tensor([0.0]))
+        log_q = Variable(torch.Tensor([0.0]))
         for layer in model.layers:
             if type(layer) is ProbabilisticDense:
                 # posterior
@@ -45,12 +49,15 @@ def variational_loss(model, log_likelihood):
                 log_q += log_gaussian(x, mu, sigma).sum()
 
                 # prior
-                mu = Variable(Tensor([0])).expand_as(x)
-                sigma = Variable(Tensor([1.0])).expand_as(x)
-                log_p += log_gaussian(x, mu, sigma).sum()
+                mu = prior_mu.expand_as(x)
+                sigma1 = prior_sigma1.expand_as(x)
+                sigma2 = prior_sigma2.expand_as(x)
+                p1 = prior_ratio * log_gaussian(x, mu, sigma1)
+                p2 = (1 - prior_ratio) * log_gaussian(x, mu, sigma2)
+                log_p += torch.sum(p1 + p2)
 
-        ll = log_likelihood(true, pred)
-        return log_q - log_p - ll
+        ll = -log_likelihood(true, pred)
+        return (log_q - log_p) / model.batches - ll
     return loss
 
 # aliases short names
@@ -58,7 +65,6 @@ mse = mean_squared_error
 
 
 def get(obj):
-    print(type(obj))
     if callable(obj):
         return obj
     elif type(obj) is str:
