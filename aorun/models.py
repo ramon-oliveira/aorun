@@ -51,6 +51,7 @@ class Model(object):
         end = n_samples + (n_samples % batch_size) + 1
         step = batch_size
         self.batches = n_samples // batch_size + n_samples % batch_size
+        self.batch_size = batch_size
 
         for epoch in range(n_epochs):
             epoch_bar = trange(begin, end, step, desc=f'Epoch {epoch+1:2}')
