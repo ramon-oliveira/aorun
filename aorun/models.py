@@ -40,7 +40,7 @@ class Model(object):
         return y
 
     @utils.numpyio
-    def fit(self, X, y, loss, optimizer, batch_size=32, n_epochs=10):
+    def fit(self, X, y, loss, optimizer, batch_size=32, epochs=10, verbose=2):
         if not self.ready:
             self._build()
         loss = losses.get(loss)
@@ -53,10 +53,20 @@ class Model(object):
         self.batches = n_samples // batch_size + n_samples % batch_size
         self.batch_size = batch_size
 
-        for epoch in range(n_epochs):
-            epoch_bar = trange(begin, end, step, desc=f'Epoch {epoch+1:2}')
+        bar = None
+        epochs_iterator = range(epochs)
+        if verbose == 1:
+            epochs_iterator = trange(epochs, desc=f'Epoch 0')
+            bar = epochs_iterator
+
+        for epoch in epochs_iterator:
+            epoch_iterator = range(begin, end, step)
+            if verbose == 2:
+                epoch_iterator = tqdm(epoch_iterator, desc=f'Epoch {epoch+1}')
+                bar = epoch_iterator
+
             loss_sum = 0
-            for ibatch, split in enumerate(epoch_bar, start=1):
+            for ibatch, split in enumerate(epoch_iterator, start=1):
                 X_batch = Variable(X[(split - batch_size):split])
                 y_batch = Variable(y[(split - batch_size):split])
 
@@ -65,7 +75,9 @@ class Model(object):
                 loss_value.backward()
                 optimizer.step()
                 loss_sum += loss_value.data[0]
-                epoch_bar.set_postfix(loss=f'{loss_sum/ibatch:.4f}')
+                if bar:
+                    bar.set_postfix(loss=f'{loss_sum/ibatch:.4f}')
+                    bar.set_description(f'Epoch {epoch+1}')
             history['loss'].append(loss_value.data[0])
 
         return history

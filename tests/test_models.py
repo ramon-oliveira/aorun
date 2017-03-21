@@ -66,7 +66,7 @@ def test_model_simple_fit():
 
     opt = SGD(lr=0.01, momentum=0.9)
     loss = mean_squared_error
-    history = model.fit(x, y, loss=loss, optimizer=opt, n_epochs=10)
+    history = model.fit(x, y, loss=loss, optimizer=opt, epochs=10)
 
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])
@@ -103,13 +103,13 @@ def test_model_loss_str_param():
 
     opt = SGD(lr=0.01, momentum=0.9)
 
-    history = model.fit(x, y, loss='mse', optimizer=opt, n_epochs=10)
+    history = model.fit(x, y, loss='mse', optimizer=opt, epochs=10)
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
 
     loss = 'mean_squared_error'
-    history = model.fit(x, y, loss=loss, optimizer=opt, n_epochs=10)
+    history = model.fit(x, y, loss=loss, optimizer=opt, epochs=10)
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
@@ -132,7 +132,7 @@ def test_model_custom_loss():
     def mae(y_true, y_pred):
         return torch.mean(torch.abs(y_true - y_pred))
 
-    history = model.fit(x, y, loss=mae, optimizer=opt, n_epochs=10)
+    history = model.fit(x, y, loss=mae, optimizer=opt, epochs=10)
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
@@ -151,7 +151,7 @@ def test_model_numpy_friendly():
     )
 
     opt = SGD(lr=0.001)
-    history = model.fit(X, y, loss='mse', optimizer=opt, n_epochs=10)
+    history = model.fit(X, y, loss='mse', optimizer=opt, epochs=10)
 
     y_pred = model.forward(X)
     assert type(y_pred) is np.ndarray
