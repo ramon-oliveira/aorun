@@ -66,7 +66,7 @@ def test_model_simple_fit():
 
     opt = SGD(lr=0.01, momentum=0.9)
     loss = mean_squared_error
-    history = model.fit(x, y, loss=loss, optimizer=opt, epochs=10)
+    history = model.fit(x, y, loss=loss, optimizer=opt, epochs=10, verbose=1)
 
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])
@@ -84,6 +84,8 @@ def test_model_fit_unknown_loss():
         Activation('relu'),
         Dense(y.size()[-1])
     )
+
+    assert len(model.params) > 0
 
     with pytest.raises(Exception) as e:
         model.fit(x, y, loss='UNKNOWN_TEST', batch_size=10, n_epoch=5)
