@@ -1,3 +1,4 @@
+import pytest
 from .context import aorun
 
 import numpy as np
@@ -13,6 +14,15 @@ from aorun.losses import binary_crossentropy
 from aorun.losses import categorical_crossentropy
 from aorun.losses import log_gaussian
 from aorun.losses import variational_loss
+from aorun import losses
+
+
+def test_get_unknown():
+    with pytest.raises(Exception) as e:
+        losses.get('UNKNOWN_TEST')
+
+    with pytest.raises(Exception) as e:
+        losses.get(23452345)
 
 
 def test_mse_variable():
