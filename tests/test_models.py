@@ -153,7 +153,7 @@ def test_model_numpy_friendly():
     )
 
     opt = SGD(lr=0.001)
-    history = model.fit(X, y, loss='mse', optimizer=opt, epochs=10)
+    history = model.fit(X, y=y, loss='mse', optimizer=opt, epochs=10)
 
     y_pred = model.forward(X)
     assert type(y_pred) is np.ndarray
