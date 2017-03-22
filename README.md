@@ -22,31 +22,6 @@ model.fit(X_train, y_train, loss='mse', optimizer=sgd)
 y_pred = model.forward(X_test)
 ```
 
-## TODO:
-
-* Model.fit:
-    - verbose level
-    - validation set
-    - set optimizer with string
-* Add layers:
-    - Convolutional2D
-    - RNN
-    - GRU
-    - LSTM
-* Add losses:
-    - Hellinger distance
-* Add optimizers:
-    - Adam
-    - RMSProp
-* Add initializations:
-    - glorot normal
-    - glorot uniform
-* Add examples:
-    - mnist
-    - cifar10
-* Refactoring:
-    - variational loss
-
 ## Why Aorun?
 
 [Aorun](https://en.wikipedia.org/wiki/Aorun) is a Dinosaur. Dinosaurs are cool.

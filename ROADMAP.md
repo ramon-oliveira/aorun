@@ -1,0 +1,22 @@
+### Roadmap for v0.1:
+
+- Layers:
+    - [x] Dense
+    - [x] ProbabilisticDense
+    - [ ] Convolutional2D
+- Activations:
+    - [x] Relu
+    - [x] Softmax
+- Optimizers:
+    - [x] SGD (with momentum)
+    - [ ] Adam
+- Losses:
+    - [x] Mean Squared Error
+    - [x] Binary Crossentropy
+    - [x] Categoriacal Crossentropy
+    - [x] Variational
+- Fit:
+    - [x] Progress bar
+    - [ ] Validation split
+- Examples:
+    - [ ] MNIST
