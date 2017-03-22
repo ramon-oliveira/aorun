@@ -66,7 +66,7 @@ def test_model_simple_fit():
 
     opt = SGD(lr=0.01, momentum=0.9)
     loss = mean_squared_error
-    history = model.fit(x, y, loss=loss, optimizer=opt, epochs=10, verbose=1)
+    history = model.fit(x, y, loss=loss, optimizer='sgd', epochs=10, verbose=1)
 
     assert len(history['loss']) == 10
     assert all(type(v) is float for v in history['loss'])

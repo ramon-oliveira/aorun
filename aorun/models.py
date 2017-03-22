@@ -6,6 +6,7 @@ from torch.autograd import Variable
 from torch.optim import SGD
 
 from . import losses
+from . import optimizers
 from . import utils
 
 
@@ -44,6 +45,7 @@ class Model(object):
         if not self.ready:
             self._build()
         loss = losses.get(loss)
+        optimizer = optimizers.get(optimizer)
         optimizer.params = self.params
         n_samples, *_ = X.size()
         history = {'loss': []}

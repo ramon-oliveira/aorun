@@ -4,11 +4,20 @@ from .context import aorun
 import torch
 from torch.autograd import Variable
 from aorun.losses import mean_squared_error
+from aorun import optimizers
 from aorun.optimizers import SGD
 
 
+def test_optmizers_get():
+    with pytest.raises(Exception) as e:
+        optimizers.get('UNKNOWN_TEST')
+
+    with pytest.raises(Exception) as e:
+        optimizers.get(123123)
+
+
 def test_sgd_without_params():
-    opt = SGD(lr=0.1)
+    opt = optimizers.get('sgd')
     with pytest.raises(Exception) as e:
         opt.step()
 

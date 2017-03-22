@@ -38,3 +38,19 @@ class SGD(Optimizer):
 
         if clear:
             self.clear_gradients()
+
+
+# Alias
+sgd = SGD
+
+
+def get(obj):
+    if hasattr(obj, 'step'):
+        return obj
+    elif type(obj) is str:
+        if obj in globals():
+            return globals()[obj]()
+        else:
+            raise Exception(f'Unknown optmizer: {obj}')
+    else:
+        raise Exception('Optimizer must be a callable or str')
