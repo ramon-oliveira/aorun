@@ -26,7 +26,7 @@ model = Model(
 )
 
 sgd = SGD(lr=0.1)
-history = model.fit(X_train, y_train, loss='mse', optimizer=sgd, n_epochs=500)
+history = model.fit(X_train, y_train, loss='mse', optimizer=sgd, epochs=100)
 y_pred = model.forward(X_test)
 print('r2_score:', metrics.r2_score(y_test, y_pred))
 print('mean_absolute_error:', metrics.mean_absolute_error(y_test, y_pred))

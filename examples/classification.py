@@ -23,16 +23,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 print(X_train.shape, y_train.shape)
 
 model = Model(
-    Dense(10, input_dim=X_train.shape[-1]),
+    Dense(100, input_dim=X_train.shape[-1]),
     Activation('relu'),
-    Dense(10),
+    Dense(100),
     Activation('relu'),
     Dense(y_test.shape[-1]),
     Activation('softmax')
 )
 
 sgd = SGD(lr=0.5)
-history = model.fit(X_train, y_train, n_epochs=100,
+history = model.fit(X_train, y_train, epochs=100,
                     loss='categorical_crossentropy', optimizer=sgd)
 
 y_pred = model.forward(X_test)

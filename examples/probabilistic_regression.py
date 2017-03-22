@@ -21,9 +21,9 @@ X = StandardScaler().fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
 model = Model()
-model.add(ProbabilisticDense(3, input_dim=X_train.shape[-1]))
+model.add(ProbabilisticDense(100, input_dim=X_train.shape[-1]))
 model.add(Activation('relu'))
-model.add(ProbabilisticDense(2))
+model.add(ProbabilisticDense(100))
 model.add(Activation('relu'))
 model.add(ProbabilisticDense(1))
 
