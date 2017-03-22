@@ -15,6 +15,18 @@ def test_get_unknown():
     with pytest.raises(Exception) as e:
         activations.get('UNKNOWN_TEST')
 
+    with pytest.raises(Exception) as e:
+        activations.get(23452345)
+
+
+def test_custom_activation():
+    def custom(x):
+        return x
+
+    activation = activations.get(custom)
+    x = torch.randn(10)
+    assert torch.equal(x, custom(x))
+
 
 def test_relu():
     x = Variable(torch.randn(10, 10))
