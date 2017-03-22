@@ -34,8 +34,8 @@ def variational_loss(model, negative_log_likelihood):
     negative_log_likelihood = get(negative_log_likelihood)
     prior_ratio = 0.5
     prior_mu = Variable(Tensor([0.0]))
-    prior_sigma1 = Variable(Tensor([10.0]))
-    prior_sigma2 = Variable(Tensor([0.5]))
+    prior_sigma1 = Variable(Tensor([1.0]))
+    prior_sigma2 = Variable(Tensor([0.05]))
 
     def loss(true, pred):
         log_p = Variable(torch.Tensor([0.0]))
