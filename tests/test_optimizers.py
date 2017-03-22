@@ -1,9 +1,16 @@
+import pytest
 from .context import aorun
 
 import torch
 from torch.autograd import Variable
 from aorun.losses import mean_squared_error
 from aorun.optimizers import SGD
+
+
+def test_sgd_without_params():
+    opt = SGD(lr=0.1)
+    with pytest.raises(Exception) as e:
+        opt.step()
 
 
 def test_sgd_learning_rate():
