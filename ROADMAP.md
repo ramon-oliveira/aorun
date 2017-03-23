@@ -9,7 +9,7 @@
     - [x] Softmax
 - Optimizers:
     - [x] SGD (with momentum)
-    - [ ] Adam
+    - [x] Adam
 - Losses:
     - [x] Mean Squared Error
     - [x] Binary Crossentropy

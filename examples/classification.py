@@ -11,9 +11,8 @@ import numpy as np
 from aorun.models import Model
 from aorun.layers import Dense
 from aorun.layers import Activation
-from aorun.optimizers import SGD
 
-X, y = datasets.load_iris(return_X_y=True)
+X, y = datasets.load_digits(return_X_y=True)
 X = X.astype('float32')
 y = np.eye(y.max() + 1)[y].astype('float32')
 
@@ -31,10 +30,10 @@ model = Model(
     Activation('softmax')
 )
 
-sgd = SGD(lr=0.5)
-history = model.fit(X_train, y_train, epochs=100,
-                    loss='categorical_crossentropy', optimizer=sgd)
+loss = 'categorical_crossentropy'
+history = model.fit(X_train, y_train, epochs=10, loss=loss, optimizer='adam')
 
 y_pred = model.forward(X_test)
 acc = metrics.accuracy_score(y_test.argmax(axis=1), y_pred.argmax(axis=1))
+print('Classes:', y.shape[1])
 print('Accuracy:', acc)

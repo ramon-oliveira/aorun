@@ -151,9 +151,28 @@ def test_model_numpy_friendly():
         Activation('relu'),
         Dense(y.shape[-1])
     )
+    history = model.fit(X, y=y, loss='mse', optimizer='sgd', epochs=10)
 
-    opt = SGD(lr=0.001)
-    history = model.fit(X, y=y, loss='mse', optimizer=opt, epochs=10)
+    y_pred = model.forward(X)
+    assert type(y_pred) is np.ndarray
+
+    assert len(history['loss']) == 10
+    assert all(type(v) is float for v in history['loss'])
+    assert history['loss'] == sorted(history['loss'], reverse=True)
+
+
+def test_model_adam_optmizer():
+    X = np.random.normal(size=[10, 10]).astype('float32')
+    y = np.random.normal(size=[10, 1]).astype('float32')
+
+    model = Model(
+        Dense(10, input_dim=X.shape[-1]),
+        Activation('relu'),
+        Dense(5),
+        Activation('relu'),
+        Dense(y.shape[-1])
+    )
+    history = model.fit(X, y=y, loss='mse', optimizer='adam', epochs=10)
 
     y_pred = model.forward(X)
     assert type(y_pred) is np.ndarray
