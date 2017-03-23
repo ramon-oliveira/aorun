@@ -3,7 +3,16 @@ import numpy as np
 from functools import wraps
 
 
-def numpyio(method):
+
+
+def preprocessing(method):
+    """
+    Model.fit preprocessing decorator.
+
+    - Prepare Numpy input/output
+    - Split train data for validation (when that's the case)
+    """
+
     @wraps(method)
     def decorator(self, *args, **kwargs):
         has_np = False
