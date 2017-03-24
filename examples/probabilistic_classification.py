@@ -32,9 +32,9 @@ model = Model(
 
 opt = SGD(lr=0.1, momentum=0.9)
 loss = variational_loss(model, 'categorical_crossentropy')
-history = model.fit(X_train, y_train, n_epochs=20, loss=loss, optimizer=opt)
+history = model.fit(X_train, y_train, epochs=20, loss=loss, optimizer=opt)
 
-y_pred = model.forward(X_test)
+y_pred = model.predict(X_test)
 acc = metrics.accuracy_score(y_test.argmax(axis=1), y_pred.argmax(axis=1))
 print('test samples:', len(y_test))
 print('classes:', len(y_test[0]))
