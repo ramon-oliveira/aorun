@@ -1,4 +1,7 @@
+import os
+import tqdm
 import torch
+import requests
 from torch import Tensor
 from torch.autograd import Variable
 import numpy as np
@@ -55,3 +58,16 @@ def to_numpy(a):
         return a
     else:
         raise ValueError('Unknown value type: {0}'.format(type(a)))
+
+
+def get_file(url, cache_subdir):
+    path = os.path.expanduser(os.path.join('~/.aorun', cache_subdir))
+    os.makedirs(path, exist_ok=True)
+    filepath = os.path.join(path, url.split('/')[-1])
+    if not os.path.exists(filepath):
+        r = requests.get(url, stream=True)
+        with open(filepath, 'wb') as f:
+            for chunk in tqdm.tqdm(r.iter_content(chunk_size=1024)):
+                if chunk:
+                    f.write(chunk)
+    return filepath
