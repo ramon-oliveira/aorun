@@ -112,9 +112,7 @@ class Model(object):
         for epoch in epochs_iterator:
             epoch_iterator = range(begin, end, step)
             if verbose == 2:
-                epoch_iterator = tqdm(epoch_iterator, desc=f'Epoch {epoch+1}')
-                progress_bar = epoch_iterator
-
+                progress_bar = tqdm(epoch_iterator)
             if progress_bar is not None:
                 progress_bar.set_description(f'Epoch {epoch+1}')
 
@@ -130,6 +128,7 @@ class Model(object):
                 loss_sum += loss_value.data[0]
                 if progress_bar is not None:
                     progress_bar.set_postfix(loss=f'{loss_sum/batch:.4f}')
+                    progress_bar.update()
 
             history['loss'].append(loss_sum / batches)
             if X_val is not None:
@@ -137,6 +136,10 @@ class Model(object):
                 history['val_loss'].append(val_loss)
                 progress_bar.set_postfix(loss=f'{loss_sum/batches:.4f}',
                                          val_loss=f'{val_loss:.4f}')
+                progress_bar.refresh()
+
+            if verbose == 2:
+                progress_bar.close()
 
         return history
 

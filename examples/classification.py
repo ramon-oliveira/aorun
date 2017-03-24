@@ -31,9 +31,9 @@ model = Model(
 )
 
 loss = 'categorical_crossentropy'
-history = model.fit(X_train, y_train, epochs=10, loss=loss, optimizer='adam')
+history = model.fit(X_train, y_train, loss=loss, val_split=0.1)
 
-y_pred = model.forward(X_test)
+y_pred = model.predict(X_test)
 acc = metrics.accuracy_score(y_test.argmax(axis=1), y_pred.argmax(axis=1))
 print('Classes:', y.shape[1])
 print('Accuracy:', acc)
