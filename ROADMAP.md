@@ -20,3 +20,12 @@
     - [x] Validation split
 - Examples:
     - [ ] MNIST
+- Package:
+    - [ ] Create setup.py
+    - [ ] Requirements file
+    - [ ] Dev requirements file
+    - [ ] Continuous integration (Travis-CI)
+- README:
+    - [ ] Code coverage button
+    - [ ] Build continuous integration button
+    - [ ] Licence button
