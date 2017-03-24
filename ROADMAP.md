@@ -3,7 +3,7 @@
 - Layers:
     - [x] Dense
     - [x] ProbabilisticDense
-    - [ ] Convolutional2D
+    - [x] Conv2D
 - Activations:
     - [x] Relu
     - [x] Softmax

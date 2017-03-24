@@ -1,8 +1,10 @@
+import pytest
 from .context import aorun
 
 import torch
 from aorun.layers import Dense
 from aorun.layers import ProbabilisticDense
+from aorun.layers import Conv2D
 from aorun.layers import Activation
 
 
@@ -75,3 +77,21 @@ def test_layer_probabilistic_dense_build():
     y2 = l.forward(x)
     assert y2.size() == (2, 5)
     assert not torch.equal(y1.data, y2.data)
+
+
+def test_layer_conv2d():
+    x = torch.randn(2, 3, 9, 9)
+    layer = Conv2D(64, (3, 3), input_dim=[3, 9, 9])
+
+    y1 = layer.forward(x)
+    assert y1.size() == (2, 64, 7, 7)
+
+    with pytest.raises(Exception) as e:
+        layer = Conv2D(64, (3, 3), input_dim=[9, 9])
+
+
+def test_layer_conv2d_params():
+    x = torch.randn(2, 3, 9, 9)
+    layer = Conv2D(64, (3, 3), input_dim=[3, 9, 9])
+
+    assert len(layer.params) == 2
