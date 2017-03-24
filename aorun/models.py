@@ -24,6 +24,7 @@ class Model(object):
         return [p for layer in self.layers for p in layer.params]
 
     def _build(self):
+        assert not self.ready
         for prev_layer, next_layer in zip(self.layers[:-1], self.layers[1:]):
             next_layer.build(prev_layer.output_dim)
         self.ready = True
@@ -45,26 +46,46 @@ class Model(object):
             value = metric(y_batch, out_batch)
             metric_sum += value.data[0]
 
-        return metric_sum / (end//batch_size)
+        return metric_sum / max(1, (end // batch_size))
 
     def forward(self, X):
-        if not self.ready: self._build()
+        if not self.ready:
+            self._build()
         y = self.layers[0].forward(X)
         for layer in self.layers[1:]:
             y = layer.forward(y)
         return y
 
-    @utils.preprocessing
     def fit(self, X, y, loss, optimizer='adam', batch_size=32, epochs=10,
-            val_split=0.0, val_data=None, verbose=2):
+            shuffle=True, val_split=0.0, val_data=None, verbose=2):
         """
         verbose: 0, 1 or 2
             - 0 total silence
             - 1 only a progress bar for all training
             - 2 one progress bar for each epoch
         """
+        X = utils.to_numpy(X)
+        y = utils.to_numpy(y)
+
+        if shuffle:
+            X, y = utils.shuffle_arrays([X, y])
+
+        if val_data is not None:
+            X_val, y_val = val_data
+        elif val_split > 0.0:
+            (X, X_val), (y, y_val) = utils.split_arrays([X, y], val_split)
+        else:
+            X_val, y_val = None, None
+
+        X = utils.to_tensor(X)
+        y = utils.to_tensor(y)
+        if X_val is not None:
+            X_val = utils.to_tensor(X_val)
+            y_val = utils.to_tensor(y_val)
+
         # create layers params if not created already
-        if not self.ready: self._build()
+        if not self.ready:
+            self._build()
 
         # set model params
         loss = losses.get(loss)
@@ -110,11 +131,21 @@ class Model(object):
                 if progress_bar is not None:
                     progress_bar.set_postfix(loss=f'{loss_sum/batch:.4f}')
 
-            history['loss'].append(loss_sum/batches)
-            if val_data is not None:
-                val_loss = self.evaluate(*val_data, loss, batch_size)
+            history['loss'].append(loss_sum / batches)
+            if X_val is not None:
+                val_loss = self.evaluate(X_val, y_val, loss, batch_size)
                 history['val_loss'].append(val_loss)
                 progress_bar.set_postfix(loss=f'{loss_sum/batches:.4f}',
                                          val_loss=f'{val_loss:.4f}')
 
         return history
+
+    def predict(self, X):
+        return_np = False
+        if type(X) is np.ndarray:
+            return_np = True
+        y = self.forward(X)
+        if return_np:
+            return utils.to_numpy(y)
+        else:
+            return y

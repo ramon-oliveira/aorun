@@ -17,6 +17,6 @@
     - [x] Variational
 - Fit:
     - [x] Progress bar
-    - [ ] Validation split
+    - [x] Validation split
 - Examples:
     - [ ] MNIST

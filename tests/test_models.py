@@ -47,7 +47,7 @@ def test_model_forward():
     )
 
     x = torch.randn(2, 4)
-    y = model.forward(x)
+    y = model.predict(x)
 
     assert y.size() == (2, 20)
 
@@ -153,7 +153,7 @@ def test_model_numpy_friendly():
     )
     history = model.fit(X, y=y, loss='mse', optimizer='sgd', epochs=10)
 
-    y_pred = model.forward(X)
+    y_pred = model.predict(X)
     assert type(y_pred) is np.ndarray
 
     assert len(history['loss']) == 10
@@ -174,7 +174,7 @@ def test_model_adam_optmizer():
     )
     history = model.fit(X, y=y, loss='mse', optimizer='adam', epochs=10)
 
-    y_pred = model.forward(X)
+    y_pred = model.predict(X)
     assert type(y_pred) is np.ndarray
 
     assert len(history['loss']) == 10
@@ -195,7 +195,7 @@ def test_model_validation_split():
     )
     history = model.fit(X, y=y, loss='mse', val_split=0.1)
 
-    y_pred = model.forward(X)
+    y_pred = model.predict(X)
     assert type(y_pred) is np.ndarray
 
     assert 'loss' in history
@@ -203,7 +203,6 @@ def test_model_validation_split():
     assert all(type(v) is float for v in history['loss'])
     assert all(type(v) is float for v in history['val_loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
-    assert history['val_loss'] == sorted(history['val_loss'], reverse=True)
 
 
 def test_model_validation_data():
@@ -219,7 +218,7 @@ def test_model_validation_data():
     )
     history = model.fit(X, y=y, loss='mse', val_data=(X, y))
 
-    y_pred = model.forward(X)
+    y_pred = model.predict(X)
     assert type(y_pred) is np.ndarray
 
     assert 'loss' in history
@@ -227,4 +226,3 @@ def test_model_validation_data():
     assert all(type(v) is float for v in history['loss'])
     assert all(type(v) is float for v in history['val_loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
-    assert history['val_loss'] == sorted(history['val_loss'], reverse=True)
