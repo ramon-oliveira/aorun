@@ -19,7 +19,7 @@
     - [x] Progress bar
     - [x] Validation split
 - Examples:
-    - [ ] MNIST
+    - [x] MNIST
 - Package:
     - [ ] Create setup.py
     - [ ] Requirements file
