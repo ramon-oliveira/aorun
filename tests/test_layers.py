@@ -86,9 +86,6 @@ def test_layer_conv2d():
     y1 = layer.forward(x)
     assert y1.size() == (2, 64, 7, 7)
 
-    with pytest.raises(Exception) as e:
-        layer = Conv2D(64, (3, 3), input_dim=[9, 9])
-
 
 def test_layer_conv2d_params():
     x = torch.randn(2, 3, 9, 9)

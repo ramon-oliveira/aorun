@@ -16,7 +16,7 @@ class Layer(object):
 
     def forward(self, X):
         X = utils.to_variable(X)
-        if type(self.input_dim) is int and len(X.size()) > 2:
+        if type(self.input_dim) is int and len(X.size()) >= 2:
             prod = np.prod(X.size()[1:])
             assert self.input_dim == prod
             X = X.view(-1, self.input_dim)
@@ -121,8 +121,13 @@ class Conv2D(Layer):
         return list(self.layer.parameters())
 
     def build(self, input_dim):
-        assert len(input_dim) == 3
-        in_channels = input_dim[0]
+        input_dim = list(input_dim)
+        assert len(input_dim) >= 2
+        if len(input_dim) == 2:
+            in_channels = 1
+            input_dim = [1] + input_dim
+        else:
+            in_channels = input_dim[0]
         self.input_dim = input_dim
         d1 = (input_dim[1] - self.kernel_size[0]) / self.stride + 1
         d2 = (input_dim[2] - self.kernel_size[1]) / self.stride + 1
@@ -133,4 +138,5 @@ class Conv2D(Layer):
 
     def forward(self, X):
         X = super(Conv2D, self).forward(X)
+        X = X.view(-1, *self.input_dim)
         return self.layer.forward(X)
