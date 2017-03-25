@@ -13,7 +13,7 @@
 - Losses:
     - [x] Mean Squared Error
     - [x] Binary Crossentropy
-    - [x] Categoriacal Crossentropy
+    - [x] Categorical Crossentropy
     - [x] Variational
 - Fit:
     - [x] Progress bar
@@ -21,11 +21,9 @@
 - Examples:
     - [x] MNIST
 - Package:
-    - [ ] Create setup.py
-    - [ ] Requirements file
-    - [ ] Dev requirements file
+    - [x] Create setup.py
     - [ ] Continuous integration (Travis-CI)
 - README:
     - [ ] Code coverage button
     - [ ] Build continuous integration button
-    - [ ] Licence button
+    - [x] License button

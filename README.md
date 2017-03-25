@@ -1,5 +1,7 @@
 # Aorun: A high-level API for PyTorch
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/ramon-oliveira/aorun/blob/master/LICENSE)
+
 Aorun is highly inspired by Keras API.
 
 ## Getting started
