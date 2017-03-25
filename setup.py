@@ -15,7 +15,7 @@ setup(
         'numpy>=1.10',
         'tqdm>=4.11',
         'requests>=2.12',
-        'pytorch>=0.1.10',
+        'torch>=0.1.10',
     ],
     extra_requires={
         'tests': [
