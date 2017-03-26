@@ -21,7 +21,6 @@ setup(
         'tests': [
             'pytest',
             'pytest-cov',
-            'pytest-rerunfailures',
             'pytest-pep8',
         ]
     },
