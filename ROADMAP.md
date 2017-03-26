@@ -22,8 +22,10 @@
     - [x] MNIST
 - Package:
     - [x] Create setup.py
-    - [ ] Continuous integration (Travis-CI)
+    - [x] Continuous integration (Travis-CI)
+    - [x] Publish on pypi
 - README:
-    - [ ] Code coverage button
-    - [ ] Build continuous integration button
-    - [x] License button
+    - [x] Code coverage badge
+    - [x] Build badge
+    - [x] License badge
+    - [x] Python version badge
