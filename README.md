@@ -1,8 +1,10 @@
-# Aorun: A high-level API for PyTorch
+# Aorun: Deep Learning over PyTorch
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/ramon-oliveira/aorun/blob/master/LICENSE)
+[![build](https://travis-ci.org/ramon-oliveira/aorun.svg?branch=master)](https://travis-ci.org/ramon-oliveira/aorun)
+[![python](https://img.shields.io/pypi/pyversions/aorun.svg)](https://pypi.python.org/pypi/aorun)
+[![license](https://img.shields.io/github/license/ramon-oliveira/aorun.svg)](https://github.com/ramon-oliveira/aorun/blob/master/LICENSE)
 
-Aorun is highly inspired by Keras API.
+Aorun intend to be a [Keras](https://keras.io) with PyTorch as backend.
 
 ## Getting started
 
@@ -17,7 +19,7 @@ model.add(Dense(10, input_dim=3))
 model.add(Activation('relu'))
 model.add(Dense(1))
 
-model.fit(X_train, y_train, loss='mse', optimizer='sgd')
+model.fit(X_train, y_train, loss='mse', optimizer='adam')
 
 y_pred = model.forward(X_test)
 ```
