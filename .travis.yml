@@ -13,6 +13,7 @@ install:
     - conda install requests numpy pytest pytest-cov pytest-pep8
     - conda install -c soumith pytorch
     - pip install tqdm
+    - pip install coveralls
 
 script: pytest
 

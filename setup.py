@@ -30,7 +30,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Development Status :: 3 - Alpha',
     ]
