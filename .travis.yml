@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+
+install:
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - export PATH="$HOME/miniconda/bin:$PATH"
+    - conda config --set always_yes true
+    - conda update --quiet conda
+    - conda create --quiet --name tests python=$TRAVIS_PYTHON_VERSION
+    - source activate tests
+    - conda install requests numpy pytest pytest-cov pytest-pep8
+    - conda install -c soumith pytorch
+    - pip install tqdm
+
+script: pytest
+
+after_success: coveralls
