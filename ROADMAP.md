@@ -1,5 +1,19 @@
-### Roadmap for v0.1:
+### Roadmap for v0.2:
+- Layers:
+    - [ ] ProbabilisticConv2D
+    - [ ] Recurrent
+    - [ ] Dropout
+- Model:
+    - [ ] Callbacks
+    - [ ] Refactoring or remove model build
+- Documentation:
+    - [ ] Introduction
+    - [ ] Install
+    - [ ] Classes
+- Examples:
+    - [ ] DQN
 
+### Roadmap for v0.1:
 - Layers:
     - [x] Dense
     - [x] ProbabilisticDense
@@ -15,8 +29,8 @@
     - [x] Binary Crossentropy
     - [x] Categorical Crossentropy
     - [x] Variational
-- Fit:
-    - [x] Progress bar
+- Model fit:
+    - [x] Training progress bar
     - [x] Validation split
 - Examples:
     - [x] MNIST
