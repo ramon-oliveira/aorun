@@ -5,7 +5,9 @@
     - [ ] Dropout
 - Model:
     - [ ] Callbacks
-    - [ ] Refactoring or remove model build
+    - [ ] remove model build or refactoring
+- Losses:
+    - [ ] variational_loss refactoring
 - Documentation:
     - [ ] Introduction
     - [ ] Install
