@@ -9,6 +9,7 @@ from torch.optim import SGD
 from . import losses
 from . import optimizers
 from . import utils
+from .layers import Dropout
 
 
 class Model(object):
@@ -16,6 +17,7 @@ class Model(object):
     def __init__(self, *layers):
         self.layers = list(layers)
         self.ready = False
+        self.train = False
 
     @property
     def params(self):
@@ -42,7 +44,7 @@ class Model(object):
             X_batch = Variable(X[(split - batch_size):split], volatile=True)
             y_batch = Variable(y[(split - batch_size):split], volatile=True)
 
-            out_batch = self.forward(X_batch)
+            out_batch = self.predict(X_batch)
             value = metric(y_batch, out_batch)
             metric_sum += value.data[0]
 
@@ -143,11 +145,16 @@ class Model(object):
 
         return history
 
-    def predict(self, X):
+    def predict(self, X, mode='test'):
+        if not self.ready:
+            self._build()
         return_np = False
         if type(X) is np.ndarray:
             return_np = True
-        y = self.forward(X)
+        y = self.layers[0].forward(X)
+        for layer in self.layers[1:]:
+            if mode == 'train' or type(layer) is not Dropout:
+                y = layer.forward(y)
         if return_np:
             return utils.to_numpy(y)
         else:

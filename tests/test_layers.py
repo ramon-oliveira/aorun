@@ -1,11 +1,14 @@
 import pytest
 from .context import aorun
 
+import numpy as np
 import torch
+from torch.autograd import Variable
 from aorun.layers import Dense
 from aorun.layers import ProbabilisticDense
 from aorun.layers import Conv2D
 from aorun.layers import Activation
+from aorun.layers import Dropout
 
 
 def test_dense_layer_output_dim():
@@ -80,8 +83,8 @@ def test_layer_probabilistic_dense_build():
 
 
 def test_layer_conv2d():
-    x = torch.randn(2, 3, 9, 9)
-    layer = Conv2D(64, (3, 3), input_dim=[3, 9, 9])
+    x = torch.randn(2, 9, 9)
+    layer = Conv2D(64, (3, 3), input_dim=[9, 9])
 
     y1 = layer.forward(x)
     assert y1.size() == (2, 64, 7, 7)
@@ -92,3 +95,18 @@ def test_layer_conv2d_params():
     layer = Conv2D(64, (3, 3), input_dim=[3, 9, 9])
 
     assert len(layer.params) == 2
+
+
+def test_layer_dropout():
+    before = torch.ones(2, 3, 9, 9)
+    layer = Dropout(p=0.6, input_dim=before.size()[1:])
+    after = layer.forward(before).data.numpy()
+    assert np.sum(after == 0) <= np.prod(before.size()) / 2
+
+    before = Variable(torch.ones(2, 3, 9, 9), requires_grad=True)
+    layer = Dropout(p=0.6, input_dim=before.size()[1:])
+    after = layer.forward(before)
+    loss = torch.mean(after)
+    loss.backward()
+    after = after.data.numpy()
+    assert np.sum(after == 0) <= np.prod(before.size()) / 2

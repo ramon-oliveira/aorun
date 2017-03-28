@@ -2,7 +2,7 @@
 - Layers:
     - [ ] ProbabilisticConv2D
     - [ ] Recurrent
-    - [ ] Dropout
+    - [x] Dropout
 - Model:
     - [ ] Callbacks
     - [ ] remove model build or refactoring

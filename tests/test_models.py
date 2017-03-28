@@ -6,6 +6,7 @@ import torch
 from aorun.models import Model
 from aorun.layers import Dense
 from aorun.layers import Conv2D
+from aorun.layers import Dropout
 from aorun.layers import Activation
 from aorun.optimizers import SGD
 from aorun.losses import mean_squared_error
@@ -41,6 +42,17 @@ def test_model_add_layers():
 
 
 def test_model_forward():
+    model = Model(
+        Dense(10, input_dim=4),
+        Dense(1),
+        Dense(20)
+    )
+
+    x = torch.randn(2, 4)
+    y = model.forward(x)
+
+    assert y.size() == (2, 20)
+
     model = Model(
         Dense(10, input_dim=4),
         Dense(1),
@@ -249,3 +261,28 @@ def test_model_conv2d():
     assert all(type(v) is float for v in history['loss'])
     assert all(type(v) is float for v in history['val_loss'])
     assert history['loss'] == sorted(history['loss'], reverse=True)
+
+
+def test_model_conv2d_dropout():
+    X = np.random.normal(size=[10, 3, 10, 10]).astype('float32')
+    y = np.random.normal(size=[10, 1]).astype('float32')
+
+    model = Model(
+        Conv2D(4, kernel_size=(3, 3), input_dim=X.shape[1:]),
+        Dense(5),
+        Activation('relu'),
+        Dense(5),
+        Dropout(0.5),
+        Activation('relu'),
+        Dense(y.shape[-1])
+    )
+    history = model.fit(X, y=y, loss='mse', epochs=10, val_data=(X, y))
+
+    y_pred = model.predict(X)
+    assert type(y_pred) is np.ndarray
+
+    assert 'loss' in history
+    assert 'val_loss' in history
+    assert all(type(v) is float for v in history['loss'])
+    assert all(type(v) is float for v in history['val_loss'])
+    assert history['val_loss'] == sorted(history['val_loss'], reverse=True)

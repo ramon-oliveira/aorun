@@ -22,19 +22,19 @@ class Layer(object):
             X = X.view(-1, self.input_dim)
         return X
 
+    def build(self, input_dim):
+        self.output_dim = input_dim
+
+    @property
+    def params(self):
+        return tuple()
+
 
 class Activation(Layer):
 
     def __init__(self, activation, *args, **kwargs):
         super(Activation, self).__init__(*args, **kwargs)
         self.activation = activations.get(activation)
-
-    @property
-    def params(self):
-        return tuple()
-
-    def build(self, input_dim):
-        self.output_dim = input_dim
 
     def forward(self, X):
         X = super(Activation, self).forward(X)
@@ -140,3 +140,17 @@ class Conv2D(Layer):
         X = super(Conv2D, self).forward(X)
         X = X.view(-1, *self.input_dim)
         return self.layer.forward(X)
+
+
+class Dropout(Layer):
+
+    def __init__(self, p=0.5, *args, **kwargs):
+        super(Dropout, self).__init__(*args, **kwargs)
+        self.p = p
+
+    def forward(self, X):
+        X = super(Dropout, self).forward(X)
+        eps = torch.Tensor(*X.size())
+        eps.fill_(self.p)
+        eps = Variable(torch.bernoulli(eps))
+        return X * eps
