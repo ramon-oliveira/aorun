@@ -10,7 +10,8 @@ install:
     - conda update --quiet conda
     - conda create --quiet --name tests python=$TRAVIS_PYTHON_VERSION
     - source activate tests
-    - conda install requests numpy pytest pytest-cov pytest-pep8 pytest-rerunfailures
+    - conda install requests numpy pytest pytest-cov pytest-pep8
+    - pip install pytest-rerunfailures
     - conda install -c soumith pytorch
     - pip install tqdm
     - pip install coveralls
