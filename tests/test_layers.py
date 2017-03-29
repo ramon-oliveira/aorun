@@ -9,6 +9,7 @@ from aorun.layers import ProbabilisticDense
 from aorun.layers import Conv2D
 from aorun.layers import Activation
 from aorun.layers import Dropout
+from aorun.layers import Recurrent
 
 
 def test_dense_layer_output_dim():
@@ -110,3 +111,10 @@ def test_layer_dropout():
     loss.backward()
     after = after.data.numpy()
     assert np.sum(after == 0) <= np.prod(before.size()) / 2
+
+
+def test_layer_recurrent():
+    X = Variable(torch.ones(2, 10, 3))
+    layer = Recurrent(units=20, length=10, input_dim=3)
+    after = layer.forward(X)
+    assert after.size() == (2, 10, 20)

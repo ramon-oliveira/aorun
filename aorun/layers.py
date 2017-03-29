@@ -4,6 +4,7 @@ import torch
 from torch.autograd import Variable
 from torch.nn import Parameter
 from torch.nn import Conv2d as TorchConv2D
+from torch.nn import RNN as TorchRecurrent
 from . import activations
 from . import initializers
 from . import utils
@@ -16,10 +17,6 @@ class Layer(object):
 
     def forward(self, X):
         X = utils.to_variable(X)
-        if type(self.input_dim) is int and len(X.size()) >= 2:
-            prod = np.prod(X.size()[1:])
-            assert self.input_dim == prod
-            X = X.view(-1, self.input_dim)
         return X
 
     def build(self, input_dim):
@@ -66,6 +63,10 @@ class Dense(Layer):
 
     def forward(self, X):
         X = super(Dense, self).forward(X)
+        if len(X.size()) >= 2:
+            prod = np.prod(X.size()[1:])
+            assert self.input_dim == prod
+            X = X.view(-1, self.input_dim)
         xW = X @ self.W
         return xW + self.b.expand_as(xW)
 
@@ -154,3 +155,27 @@ class Dropout(Layer):
         eps.fill_(self.p)
         eps = Variable(torch.bernoulli(eps))
         return X * eps
+
+
+class Recurrent(Layer):
+
+    def __init__(self, units, length, *args, **kwargs):
+        super(Recurrent, self).__init__(*args, **kwargs)
+        self.units = units
+        self.length = length
+        self.output_dim = [length, units]
+        if self.input_dim is not None:
+            self.build(self.input_dim)
+
+    @property
+    def params(self):
+        return list(self.layer.parameters())
+
+    def build(self, input_dim):
+        self.input_dim = input_dim
+        self.layer = TorchRecurrent(self.input_dim, self.units, self.length)
+
+    def forward(self, X):
+        X = super(Recurrent, self).forward(X)
+        outputs, states = self.layer.forward(X)
+        return outputs
