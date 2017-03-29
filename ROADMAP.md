@@ -1,4 +1,4 @@
-### Roadmap for v0.2:
+### Roadmap for v0.1.1:
 - Layers:
     - [ ] ProbabilisticConv2D
     - [ ] Recurrent
