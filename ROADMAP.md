@@ -1,7 +1,7 @@
 ### Roadmap for v0.1.1:
 - Layers:
     - [ ] ProbabilisticConv2D
-    - [ ] Recurrent
+    - [x] Recurrent
     - [x] Dropout
 - Model:
     - [ ] Callbacks

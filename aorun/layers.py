@@ -12,8 +12,9 @@ from . import utils
 
 class Layer(object):
 
-    def __init__(self, input_dim=None):
+    def __init__(self, input_dim=None, init='glorot_uniform'):
         self.input_dim = input_dim
+        self.init = initializers.get(init)
 
     def forward(self, X):
         X = utils.to_variable(X)
@@ -40,11 +41,10 @@ class Activation(Layer):
 
 class Dense(Layer):
 
-    def __init__(self, units, init='glorot_uniform', *args, **kwargs):
+    def __init__(self, units, *args, **kwargs):
         super(Dense, self).__init__(*args, **kwargs)
         self.units = units
         self.output_dim = units
-        self.init = initializers.get(init)
         if self.input_dim:
             self.build(self.input_dim)
 
@@ -53,8 +53,7 @@ class Dense(Layer):
         return (self.W, self.b)
 
     def build(self, input_dim):
-        if type(input_dim) is list:
-            input_dim = int(np.prod(input_dim))
+        assert type(input_dim) is int
         self.input_dim = input_dim
         W_shape = [self.input_dim, self.output_dim]
         b_shape = [self.output_dim]
@@ -63,10 +62,7 @@ class Dense(Layer):
 
     def forward(self, X):
         X = super(Dense, self).forward(X)
-        if len(X.size()) >= 2:
-            prod = np.prod(X.size()[1:])
-            assert self.input_dim == prod
-            X = X.view(-1, self.input_dim)
+        size = X.size()
         xW = X @ self.W
         return xW + self.b.expand_as(xW)
 
@@ -159,11 +155,13 @@ class Dropout(Layer):
 
 class Recurrent(Layer):
 
-    def __init__(self, units, length, *args, **kwargs):
+    def __init__(self, units, length, stateful=False, *args, **kwargs):
         super(Recurrent, self).__init__(*args, **kwargs)
         self.units = units
         self.length = length
         self.output_dim = [length, units]
+        self.stateful = stateful
+        self.states = None
         if self.input_dim is not None:
             self.build(self.input_dim)
 
@@ -175,7 +173,48 @@ class Recurrent(Layer):
         self.input_dim = input_dim
         self.layer = TorchRecurrent(self.input_dim, self.units, self.length)
 
+    def clear_states(self):
+        self.states = None
+
     def forward(self, X):
         X = super(Recurrent, self).forward(X)
-        outputs, states = self.layer.forward(X)
+        if self.stateful and self.states is not None:
+            outputs, self.states = self.layer.forward(X, self.states)
+        else:
+            outputs, self.states = self.layer.forward(X)
+
         return outputs
+
+
+class Flatten(Layer):
+
+    def __init__(self, *args, **kwargs):
+        super(Flatten, self).__init__(*args, **kwargs)
+
+    def build(self, input_dim):
+        self.input_dim = input_dim
+        self.output_dim = int(np.prod(input_dim))
+
+    def forward(self, X):
+        X = super(Flatten, self).forward(X)
+        X = X.view(X.size()[0], self.output_dim)
+        return X
+
+
+class TimeDistributed(object):
+
+    def __init__(self, layer):
+        self.layer = layer
+
+    @property
+    def params(self):
+        return self.layer.params
+
+    def build(self, input_dim):
+        length, dim = input_dim
+        return self.layer.build(dim)
+
+    def forward(self, X):
+        batch_size, length, dim = X.size()
+        out = self.layer.forward(X.view(batch_size * length, dim))
+        return out.view(batch_size, length, out.size(1))

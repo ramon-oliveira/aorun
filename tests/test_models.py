@@ -7,7 +7,10 @@ from aorun.models import Model
 from aorun.layers import Dense
 from aorun.layers import Conv2D
 from aorun.layers import Dropout
+from aorun.layers import Recurrent
 from aorun.layers import Activation
+from aorun.layers import Flatten
+from aorun.layers import TimeDistributed
 from aorun.optimizers import SGD
 from aorun.losses import mean_squared_error
 
@@ -247,6 +250,7 @@ def test_model_conv2d():
 
     model = Model(
         Conv2D(4, kernel_size=(3, 3), input_dim=X.shape[1:]),
+        Flatten(),
         Dense(5),
         Activation('relu'),
         Dense(y.shape[-1])
@@ -269,6 +273,7 @@ def test_model_conv2d_dropout():
 
     model = Model(
         Conv2D(4, kernel_size=(3, 3), input_dim=X.shape[1:]),
+        Flatten(),
         Dense(5),
         Activation('relu'),
         Dense(5),
@@ -286,3 +291,34 @@ def test_model_conv2d_dropout():
     assert all(type(v) is float for v in history['loss'])
     assert all(type(v) is float for v in history['val_loss'])
     assert history['val_loss'] == sorted(history['val_loss'], reverse=True)
+
+
+def test_model_recurrent():
+    X = np.random.normal(size=[2, 3, 4]).astype('float32')
+    y = np.random.normal(size=[2, 3, 2]).astype('float32')
+
+    model = Model(
+        Recurrent(units=2, length=3, input_dim=4),
+        Activation('relu')
+    )
+    history = model.fit(X, y, loss='mse')
+
+    y_pred = model.predict(X)
+    assert type(y_pred) is np.ndarray
+
+    assert 'loss' in history
+    assert history['loss'] == sorted(history['loss'], reverse=True)
+
+
+def test_model_recurrent_time_distributed():
+    X = np.random.normal(size=[2, 3, 4]).astype('float32')
+    y = np.random.normal(size=[2, 3, 10]).astype('float32')
+
+    model = Model(
+        Recurrent(units=2, length=3, input_dim=4),
+        Activation('relu'),
+        TimeDistributed(Dense(units=10)),
+    )
+    history = model.fit(X, y, loss='mse')
+    y_pred = model.predict(X)
+    assert history['loss'] == sorted(history['loss'], reverse=True)
