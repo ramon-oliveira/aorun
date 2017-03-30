@@ -116,5 +116,26 @@ def test_layer_dropout():
 def test_layer_recurrent():
     X = Variable(torch.ones(2, 10, 3))
     layer = Recurrent(units=20, length=10, input_dim=3)
-    after = layer.forward(X)
-    assert after.size() == (2, 10, 20)
+    y1 = layer.forward(X)
+    y2 = layer.forward(X)
+    assert y1.size() == (2, 10, 20)
+    assert torch.equal(y1.data, y2.data)
+
+
+def test_layer_recurrent_stateful():
+    X = Variable(torch.ones(2, 10, 3))
+    layer = Recurrent(units=20, length=10, input_dim=3, stateful=True)
+    y1 = layer.forward(X)
+    y2 = layer.forward(X)
+    assert y1.size() == (2, 10, 20)
+    assert not torch.equal(y1.data, y2.data)
+
+
+def test_layer_recurrent_stateful_clear_states():
+    X = Variable(torch.ones(2, 10, 3))
+    layer = Recurrent(units=20, length=10, input_dim=3, stateful=True)
+    y1 = layer.forward(X)
+    layer.clear_states()
+    y2 = layer.forward(X)
+    assert y1.size() == (2, 10, 20)
+    assert torch.equal(y1.data, y2.data)
