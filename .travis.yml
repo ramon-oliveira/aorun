@@ -12,7 +12,7 @@ install:
     - source activate tests
     - conda install requests numpy pytest pytest-cov pytest-pep8
     - pip install pytest-rerunfailures
-    - conda install -c soumith pytorch
+    - conda install pytorch=0.1.10 torchvision -c soumith
     - pip install tqdm
     - pip install coveralls
 
