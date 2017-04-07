@@ -26,6 +26,25 @@ model.fit(X_train, y_train, loss='mse', optimizer='adam')
 y_pred = model.predict(X_test)
 ```
 
+## Install
+
+First of all, you have to install the latest stable version of [PyTorch](http://pytorch.org):
+
+Using anaconda:
+```bash
+conda install -c soumith pytorch
+```
+
+Using pip:
+```bash
+pip install http://download.pytorch.org/whl/cu80/torch-0.1.11.post5-cp35-cp35m-linux_x86_64.whl
+```
+
+Then you can install aorun as any other python package, with pip:
+```bash
+$ pip install aorun
+```
+
 ## Why Aorun?
 
 [Aorun](https://en.wikipedia.org/wiki/Aorun) is a Dinosaur. Dinosaurs are cool.

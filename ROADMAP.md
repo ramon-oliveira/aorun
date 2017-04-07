@@ -10,7 +10,7 @@
     - [ ] variational_loss refactoring
 - Documentation:
     - [ ] Introduction
-    - [ ] Install
+    - [x] Install
     - [ ] Classes
 - Examples:
     - [ ] DQN
