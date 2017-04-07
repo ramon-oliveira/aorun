@@ -5,6 +5,7 @@ from torch.autograd import Variable
 from torch.nn import Parameter
 from torch.nn import Conv2d as TorchConv2D
 from torch.nn import RNN as TorchRecurrent
+from torch.nn import Linear as TorchDense
 from . import activations
 from . import initializers
 from . import utils
@@ -50,21 +51,16 @@ class Dense(Layer):
 
     @property
     def params(self):
-        return (self.W, self.b)
+        return list(self.layer.parameters())
 
     def build(self, input_dim):
         assert type(input_dim) is int
         self.input_dim = input_dim
-        W_shape = [self.input_dim, self.output_dim]
-        b_shape = [self.output_dim]
-        self.W = self.init(W_shape, self.input_dim, self.output_dim)
-        self.b = self.init(b_shape, self.input_dim, self.output_dim)
+        self.layer = TorchDense(self.input_dim, self.units)
 
     def forward(self, X):
         X = super(Dense, self).forward(X)
-        size = X.size()
-        xW = X @ self.W
-        return xW + self.b.expand_as(xW)
+        return self.layer.forward(X)
 
 
 class ProbabilisticDense(Layer):

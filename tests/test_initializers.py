@@ -12,8 +12,10 @@ def test_initializer_glorot_uniform():
     input_dim = X.size()[-1]
     dense = Dense(10, init='glorot_uniform', input_dim=input_dim)
 
-    assert dense.W.max() <= math.sqrt(6 / (input_dim + 10))
-    assert dense.W.min() >= -math.sqrt(6 / (input_dim + 10))
+    assert dense.params[0].max() <= math.sqrt(6 / (input_dim + 10))
+    assert dense.params[1].max() <= math.sqrt(6 / (input_dim + 10))
+    assert dense.params[0].min() >= -math.sqrt(6 / (input_dim + 10))
+    assert dense.params[1].min() >= -math.sqrt(6 / (input_dim + 10))
 
 
 def test_initializer_get():
