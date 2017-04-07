@@ -9,8 +9,6 @@ from functools import wraps
 
 
 def shuffle_arrays(arrays):
-    # arrays must have the same length
-    assert np.all(np.array([len(a) for a in arrays]) == len(arrays[0]))
     idxs = np.arange(len(arrays[0]))
     np.random.shuffle(idxs)
     return [a[idxs] for a in arrays]
@@ -25,8 +23,6 @@ def split_arrays(arrays, proportion):
         proportion = 0.3
         [70%] | [30%]
     """
-    # arrays must have the same length
-    assert np.all(np.array([len(a) for a in arrays]) == len(arrays[0]))
     proportion = 1 - proportion
     split = int(len(arrays[0]) * proportion)
     return [(a[:split], a[split:]) for a in arrays]
