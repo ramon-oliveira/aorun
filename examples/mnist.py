@@ -11,6 +11,7 @@ from aorun import datasets
 from aorun.models import Model
 from aorun.layers import Conv2D
 from aorun.layers import Dense
+from aorun.layers import Flatten
 from aorun.layers import Activation
 
 (X, y), (X_test, y_test) = datasets.load_mnist()
@@ -27,6 +28,7 @@ y_test = y_test.astype('float32')
 
 model = Model(
     Conv2D(8, kernel_size=(3, 3), input_dim=X.shape[1:]),
+    Flatten(),
     Activation('relu'),
     Dense(100),
     Activation('relu'),
