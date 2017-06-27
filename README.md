@@ -6,7 +6,7 @@
 [![python](https://img.shields.io/pypi/pyversions/aorun.svg)](https://pypi.python.org/pypi/aorun)
 [![license](https://img.shields.io/github/license/ramon-oliveira/aorun.svg)](https://github.com/ramon-oliveira/aorun/blob/master/LICENSE)
 
-Aorun intend to be a [Keras](https://keras.io) with PyTorch as backend.
+Aorun intend to implement an API similar to [Keras](https://keras.io) with PyTorch as backend.
 
 ## Getting started
 
@@ -28,17 +28,9 @@ y_pred = model.predict(X_test)
 
 ## Install
 
-First of all, you have to install the latest stable version of [PyTorch](http://pytorch.org):
+First of all, it's import to mention that this project is develop with **Python 3.5+** in mind. I do not recommend using Aorun with older versions.
 
-Using anaconda:
-```bash
-conda install -c soumith pytorch
-```
-
-Using pip:
-```bash
-pip install http://download.pytorch.org/whl/cu80/torch-0.1.11.post5-cp35-cp35m-linux_x86_64.whl
-```
+As prerequisite, you have to install the latest stable version of [PyTorch](http://pytorch.org)
 
 Then you can install aorun as any other python package, with pip:
 ```bash
