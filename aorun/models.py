@@ -145,7 +145,7 @@ class Model(object):
 
         return history
 
-    def predict(self, X, mode='test'):
+    def predict(self, X, propabilistic=False):
         if not self.ready:
             self._build()
         return_np = False
@@ -153,7 +153,7 @@ class Model(object):
             return_np = True
         y = self.layers[0].forward(X)
         for layer in self.layers[1:]:
-            if mode == 'train' or type(layer) is not Dropout:
+            if propabilistic or type(layer) is not Dropout:
                 y = layer.forward(y)
         if return_np:
             return utils.to_numpy(y)
